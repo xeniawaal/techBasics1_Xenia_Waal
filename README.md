@@ -6,15 +6,15 @@
 # I created it because it looks similar to my childhood dog who is sadly not alive anymore
 # (and because i looove dogs!) 
 
-print("   /^-----^\\")
-print("  V  o o  V")
-print("   |  Y  |")
-print("    \\ Q /")
-print("    / - \\")
-print("   |    \\")
-print("   |     \\     )")
-print("   || (___\\====")
+print("   /^-----^\\") 
+print("  V  o o  V") 
+print("   |  Y  |") 
+print("    \\ Q /") 
+print("    / - \\") 
+print("   |    \\") 
+print("   |     \\     )") 
+print("   || (___\\====") 
 
 
 # the next picture is him 
-![Mein Bild](meinbild.png) 
+![Screenshot](Bildschirmfoto%202026-04-20%20um%2012.22.11.png) 
