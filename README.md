@@ -6,6 +6,7 @@
 # I created it because it looks similar to my childhood dog who is sadly not alive anymore
 # (and because i looove dogs!) 
 
+```python
 print("   /^-----^\\") 
 print("  V  o o  V") 
 print("   |  Y  |") 
