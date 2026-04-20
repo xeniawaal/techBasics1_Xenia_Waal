@@ -14,7 +14,8 @@ print("    \\ Q /")
 print("    / - \\") 
 print("   |    \\") 
 print("   |     \\     )") 
-print("   || (___\\====") 
+print("   || (___\\====")
+```
 
 
 # the next picture is him 
