@@ -1,0 +1,34 @@
+from turtle import *
+import random
+
+speed(0)
+hideturtle()
+
+square_size = 25
+rows = 12
+cols = 10
+
+start_x = -140
+start_y = 180
+
+def draw_square():
+    for i in range(4):
+        forward(square_size)
+        right(90)
+
+for row in range(rows):
+    for col in range(cols):
+        chaos = row * 2
+
+        x = start_x + col * square_size + random.randint(-chaos, chaos)
+        y = start_y - row * square_size + random.randint(-chaos, chaos)
+        rotation = random.randint(-chaos, chaos)
+
+        penup()
+        goto(x, y)
+        setheading(rotation)
+        pendown()
+
+        draw_square()
+
+done() 
