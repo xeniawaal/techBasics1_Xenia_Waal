@@ -1,34 +1,42 @@
-from turtle import *
+from ColabTurtle.Turtle import *
 import random
 
-speed(0)
+initializeTurtle()
+speed(13)
 hideturtle()
 
-square_size = 25
-rows = 12
-cols = 10
+# colors
+flower_colors = ["red", "pink", "purple", "orange"]
 
-start_x = -140
-start_y = 180
+# draw one tulip
+def tulip(x, y, color):
+    
+    # stem
+    pencolor("green")
+    penup()
+    goto(x, y)
+    pendown()
+    setheading(90)
+    forward(40)
 
-def draw_square():
-    for i in range(4):
-        forward(square_size)
-        right(90)
+    # flower
+    pencolor(color)
 
-for row in range(rows):
-    for col in range(cols):
-        chaos = row * 2
+    for i in range(3):
+        right(120)
+        forward(10)
 
-        x = start_x + col * square_size + random.randint(-chaos, chaos)
-        y = start_y - row * square_size + random.randint(-chaos, chaos)
-        rotation = random.randint(-chaos, chaos)
+# nested loops for flower field
+for row in range(5):
+    for col in range(8):
 
-        penup()
-        goto(x, y)
-        setheading(rotation)
-        pendown()
+        x = 50 + col * 60 + random.randint(-10, 10)
+        y = 50 + row * 60 + random.randint(-10, 10)
 
-        draw_square()
+        color = random.choice(flower_colors)
 
-done() 
+        # conditional statement
+        if row % 2 == 0:
+            tulip(x, y, color)
+        else:
+            tulip(x + 10, y, color) 
