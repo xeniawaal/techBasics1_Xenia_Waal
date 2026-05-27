@@ -1,0 +1,216 @@
+import csv
+from datetime import datetime
+
+DEBUG = True 
+
+RECORD_FILE = "records.csv"
+
+inventory = []
+
+items_in_room = [
+    {"name": "towel", "type": "protection", "description": "Helps you breathe through smoke."},
+    {"name": "key", "type": "tool", "description": "Opens the front door."},
+    {"name": "water", "type": "tool", "description": "Can weaken small flames."},
+    {"name": "phone", "type": "tool", "description": "Can call the fire department."},
+    {"name": "photo", "type": "memory", "description": "A family photo."},
+    {"name": "flashlight", "type": "tool", "description": "Helps you see through smoke."}
+]
+
+MAX_INVENTORY_SIZE = 5
+
+door_locked = True
+fire_blocking_exit = True
+protected_from_smoke = False
+turns_used = 0
+
+
+def find_item(item_name, item_list):
+    for item in item_list:
+        if item["name"] == item_name:
+            return item
+    return None
+
+
+def show_inventory():
+    if len(inventory) == 0:
+        print("Your inventory is empty.")
+    else:
+        print("Inventory:")
+        for item in inventory:
+            print("-", item["name"])
+
+
+def show_room_items():
+    print("Items in the room:")
+    for item in items_in_room:
+        print("-", item["name"])
+
+
+def pick_up(item_name):
+    item = find_item(item_name, items_in_room)
+
+    if item is None:
+        print("This item is not here.")
+    elif len(inventory) >= MAX_INVENTORY_SIZE:
+        print("Your inventory is full.")
+    else:
+        inventory.append(item)
+        items_in_room.remove(item)
+        print("You picked up the", item_name)
+
+
+def drop(item_name):
+    item = find_item(item_name, inventory)
+
+    if item is None:
+        print("You do not have this item.")
+    else:
+        inventory.remove(item)
+        items_in_room.append(item)
+        print("You dropped the", item_name)
+
+
+def use(item_name):
+    global door_locked, fire_blocking_exit, protected_from_smoke
+
+    item = find_item(item_name, inventory)
+
+    if item is None:
+        print("You do not have this item.")
+    elif item_name == "key":
+        door_locked = False
+        print("You unlocked the door.")
+    elif item_name == "water":
+        fire_blocking_exit = False
+        print("You put out the small flames.")
+    elif item_name == "towel":
+        protected_from_smoke = True
+        print("You protect yourself from the smoke.")
+    elif item_name == "phone":
+        print("You call the fire department.")
+    else:
+        print("You cannot use this item right now.")
+
+
+def examine(item_name):
+    item = find_item(item_name, inventory)
+
+    if item is None:
+        item = find_item(item_name, items_in_room)
+
+    if item is None:
+        print("You cannot find this item.")
+    else:
+        print(item["description"])
+
+
+def save_record(name, score):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    try:
+        with open(RECORD_FILE, "r") as file:
+            pass
+    except FileNotFoundError:
+        with open(RECORD_FILE, "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Name", "Timestamp", "Score"])
+
+    with open(RECORD_FILE, "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([name, timestamp, score])
+
+
+def show_leaderboard():
+    records = []
+
+    try:
+        with open(RECORD_FILE, "r") as file:
+            reader = csv.DictReader(file)
+
+            for row in reader:
+                records.append(row)
+
+    except FileNotFoundError:
+        print("No records found yet.")
+        return
+
+    records = sorted(records, key=lambda x: int(x["Score"]))
+
+    print("\n--- Leaderboard ---")
+    for record in records[:5]:
+        print(record["Name"], "-", record["Score"], "turns", "-", record["Timestamp"])
+
+
+def try_escape():
+    if door_locked:
+        print("The door is locked.")
+        return False
+    elif fire_blocking_exit:
+        print("Fire is blocking the exit.")
+        return False
+    elif not protected_from_smoke:
+        print("The smoke is too dangerous.")
+        return False
+    else:
+        print("You escaped the burning house!")
+        return True
+
+
+def game_loop():
+    global turns_used
+
+    name = input("Enter your name: ")
+
+    if DEBUG:
+        print("DEBUG mode is on. Skipping the main game.")
+        save_record(name, 99)
+        show_leaderboard()
+        return
+
+    print("\nWelcome to Burning House Escape!")
+    print("Type 'help' to see all commands.")
+
+    while True:
+        command = input("\n> ").strip().lower()
+        turns_used += 1
+
+        match command.split():
+            case ["help"]:
+                print("Commands: inventory, look, pickup [item], drop [item], use [item], examine [item], escape, quit")
+
+            case ["inventory"]:
+                show_inventory()
+
+            case ["look"]:
+                show_room_items()
+
+            case ["pickup", item_name]:
+                pick_up(item_name)
+
+            case ["drop", item_name]:
+                drop(item_name)
+
+            case ["use", item_name]:
+                use(item_name)
+
+            case ["examine", item_name]:
+                examine(item_name)
+
+            case ["escape"]:
+                escaped = try_escape()
+                if escaped:
+                    save_record(name, turns_used)
+                    show_leaderboard()
+                    break
+
+            case ["quit"]:
+                print("Thanks for playing!")
+                break
+
+            case _:
+                print("Unknown command.")
+
+
+if __name__ == "__main__":
+    game_loop()
+    
